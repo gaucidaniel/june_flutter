@@ -1,6 +1,10 @@
 library june_flutter;
 
 class June {
+  June._privateConstructor();
+  static final June _instance = June._privateConstructor();
+  static June get instance => _instance;
+
   void init({required String writeKey}) async {}
 
   Future<bool> identifyUser({

@@ -1,40 +1,61 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+## June
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+June is a product analytics tool that allows you to capture data on how users use your product.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+This package is Dart wrapper around the June HTTP API - which allows you to easily track data on June in your Dart projects and Flutter apps. Check out the official [June documention](https://www.june.so/docs) for more information on using June. 
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+### Steps
+1. Depend on it  \
+Add this to your package's pubspec.yaml file:
+```
+   dependencies:
+      june_flutter: ^0.x.x # set this to the latest version
+```
+2. Install it \
+You can install packages from the command line:
+```
+   $ flutter pub get
+```
+3. Import it \
+Now in your Dart code, you can use:
+```
+import 'package:june_flutter/june_flutter.dart';
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+## 1. Initialize June
+To start tracking with the SDK you must first initialize with your June write key. First add `import 'package:june_flutter/june_flutter.dart';` and call `June.instance.init(writeKey: writeKey);`. You can find your write key on the [June dashboard](https://analytics.june.so/).
 
 ```dart
-const like = 'sample';
+import 'package:june_flutter/june_flutter.dart';
+...
+class _YourClassState extends State<YourClass> {
+
+  @override
+  void initState() {
+    super.initState();
+    June.instance.init(writeKey: "June Write Key");
+  }
+...
 ```
 
-## Additional information
+## 3. Send Data
+Once you've initialized the SDK, you can simply call the June instance to track events and identify users/companies.
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
-# june_flutter
+### Identify
+```dart
+// Identify user with optional traits
+June.instance.identifyUser(userId: 'User ID', properties: {'type': 'admin'});
+
+// Identify company
+June.instance.identifyGroup(groupId: 'Company ID', userId: 'User ID', properties: {'plan': 'enterprise'});
+```
+
+### Track
+```dart
+// Track event and optional properties
+June.instance.track('Recipe Tapped', properties: {'location': 'home_feed'});
+```

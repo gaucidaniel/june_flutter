@@ -29,17 +29,11 @@ To start tracking with the SDK you must first initialize with your June write ke
 ```dart
 import 'package:june_flutter/june_flutter.dart';
 ...
-class _YourClassState extends State<YourClass> {
-
-  @override
-  void initState() {
-    super.initState();
-    June.instance.init(writeKey: "June Write Key");
-  }
+June.instance.init(writeKey: "June Write Key");
 ...
 ```
 
-## 3. Send Data
+## 2. Send Data
 Once you've initialized the SDK, you can simply call the June instance to track events and identify users/companies.
 
 ### Identify

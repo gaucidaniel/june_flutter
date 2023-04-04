@@ -9,17 +9,15 @@ This package is Dart wrapper around the June HTTP API - which allows you to easi
 ### Steps
 
 #### Depend on it
+Add the `june_flutter` dependency to your `pubspec.yaml` and run `flutter pub get`.
+```yaml
+dependencies:
+    june_flutter: ^0.x.x # set this to the latest version
 ```
-   dependencies:
-      june_flutter: ^0.x.x # set this to the latest version
-```
-#### Fetch library
-```
-   $ flutter pub get
-```
+
 #### Import it
 Now in your Dart code, you can use:
-```
+```dart
 import 'package:june_flutter/june_flutter.dart';
 ```
 

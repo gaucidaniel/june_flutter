@@ -1,7 +1,7 @@
 name: june_flutter
 description: June HTTP API wrapper
 version: 0.0.1
-homepage:
+repository: 'https://github.com/gaucidaniel/june_flutter'
 
 environment:
   sdk: '>=2.19.6 <3.0.0'

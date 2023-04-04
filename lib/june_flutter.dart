@@ -1,6 +1,5 @@
 library june_flutter;
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 // TODO: Remove
@@ -28,7 +27,7 @@ class June {
     // Restore user id/group id from the session if not passed as parameters
     final finalUserId = userId ?? _userId;
     if (finalUserId == null) {
-      debugPrint("identifyUser() must be called with a non-null userId before being called with just the traits.");
+      print("identifyUser() must be called with a non-null userId before being called with just the traits.");
       return false;
     }
 
@@ -51,13 +50,13 @@ class June {
     // Restore user id/group id from the session if not passed as parameters
     final finalUserId = userId ?? _userId;
     if (finalUserId == null) {
-      debugPrint("identifyGroup() must be called with a non-null userId before being called without it.");
+      print("identifyGroup() must be called with a non-null userId before being called without it.");
       return false;
     }
 
     final finalGroupId = groupId ?? _groupId;
     if (finalGroupId == null) {
-      debugPrint("identifyGroup() must be called with a non-null groupId before being called without it.");
+      print("identifyGroup() must be called with a non-null groupId before being called without it.");
       return false;
     }
 
@@ -86,7 +85,7 @@ class June {
     required Map<String, dynamic> body,
   }) async {
     if (_writeKey == null) {
-      debugPrint("June must be initialized before calling any actions.");
+      print("June must be initialized before calling any actions.");
       return false;
     }
 
@@ -103,7 +102,7 @@ class June {
       final response = await http.post(Uri.parse(url), headers: headers, body: body);
       return response.statusCode == 200;
     } on Exception catch (error) {
-      debugPrint('June HTTP API returned with error: ${error.toString()}');
+      print('June HTTP API returned with error: ${error.toString()}');
       return false;
     }
   }

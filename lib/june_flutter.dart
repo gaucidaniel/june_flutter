@@ -1,8 +1,9 @@
 library june_flutter;
 
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
-// TODO: Remove
 class June {
   June._privateConstructor();
   static final June _instance = June._privateConstructor();
@@ -17,55 +18,45 @@ class June {
   }
 
   Future<bool> identifyUser({
-    String? userId,
+    required String userId,
     Map<String, dynamic> traits = const {},
   }) async {
-    // Reset existing fields to make sure we don't get user/group conflicts
-    _userId = null;
+    _userId = userId;
     _groupId = null;
 
-    // Restore user id/group id from the session if not passed as parameters
-    final finalUserId = userId ?? _userId;
-    if (finalUserId == null) {
-      print("identifyUser() must be called with a non-null userId before being called with just the traits.");
-      return false;
-    }
-
-    // Make HTTP call with the appropriate payload
-    return await _makeHttpCall(endpoint: "identify", body: {
-      "userId": finalUserId,
-      "traits": traits,
-    });
+    return await _identifyNullableUser(
+      userId: userId,
+      traits: traits,
+      methodCall: "identifyUser()",
+    );
   }
 
   Future<bool> identifyGroup({
-    String? userId,
-    String? groupId,
+    required String userId,
+    required String groupId,
     Map<String, dynamic> traits = const {},
   }) async {
-    // Reset existing fields to make sure we don't get user/group conflicts
-    _userId = null;
-    _groupId = null;
+    _userId = userId;
+    _groupId = groupId;
 
-    // Restore user id/group id from the session if not passed as parameters
-    final finalUserId = userId ?? _userId;
-    if (finalUserId == null) {
-      print("identifyGroup() must be called with a non-null userId before being called without it.");
-      return false;
-    }
+    return await _identifyNullableGroup(
+      userId: userId,
+      groupId: groupId,
+      traits: traits,
+      methodCall: "identifyGroup()",
+    );
+  }
 
-    final finalGroupId = groupId ?? _groupId;
-    if (finalGroupId == null) {
-      print("identifyGroup() must be called with a non-null groupId before being called without it.");
-      return false;
-    }
+  Future<bool> setCurrentUserTraits({
+    Map<String, dynamic> traits = const {},
+  }) async {
+    return await _identifyNullableUser(traits: traits, methodCall: "setCurrentUserTraits()");
+  }
 
-    // Make HTTP call with the appropriate payload
-    return await _makeHttpCall(endpoint: "group", body: {
-      "userId": finalUserId,
-      "groupId": finalUserId,
-      "traits": traits,
-    });
+  Future<bool> setCurrentGroupTraits({
+    Map<String, dynamic> traits = const {},
+  }) async {
+    return await _identifyNullableGroup(traits: traits, methodCall: "setCurrentGroupTraits()");
   }
 
   Future<bool> track(
@@ -77,6 +68,47 @@ class June {
       if (properties != null) "properties": properties,
       if (_userId != null) "userId": _userId,
       if (_groupId != null) "context": {"groupId": _groupId},
+    });
+  }
+
+  Future<bool> _identifyNullableUser({
+    required String methodCall,
+    String? userId,
+    Map<String, dynamic> traits = const {},
+  }) async {
+    // Restore user id/group id from the session if not passed as parameters
+    final finalUserId = userId ?? _userId;
+    if (finalUserId == null) {
+      print("identifyUser() must be called with a non-null userId before calling $methodCall");
+      return false;
+    }
+
+    // Make HTTP call with the appropriate payload
+    return await _makeHttpCall(endpoint: "identify", body: {
+      "userId": finalUserId,
+      "traits": traits,
+    });
+  }
+
+  Future<bool> _identifyNullableGroup({
+    required String methodCall,
+    String? userId,
+    String? groupId,
+    Map<String, dynamic> traits = const {},
+  }) async {
+    // Restore user id/group id from the session if not passed as parameters
+    final finalUserId = userId ?? _userId;
+    final finalGroupId = groupId ?? _groupId;
+    if (finalUserId == null || finalGroupId == null) {
+      print("identifyGroup() must be calledbefore calling $methodCall");
+      return false;
+    }
+
+    // Make HTTP call with the appropriate payload
+    return await _makeHttpCall(endpoint: "group", body: {
+      "userId": finalUserId,
+      "groupId": finalUserId,
+      "traits": traits,
     });
   }
 
@@ -99,7 +131,7 @@ class June {
       // Inject timestamp into body
       body["timestamp"] = DateTime.now().toIso8601String();
 
-      final response = await http.post(Uri.parse(url), headers: headers, body: body);
+      final response = await http.post(Uri.parse(url), headers: headers, body: jsonEncode(body));
       return response.statusCode == 200;
     } on Exception catch (error) {
       print('June HTTP API returned with error: ${error.toString()}');

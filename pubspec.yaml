@@ -1,6 +1,6 @@
 name: june_flutter
-description: June HTTP API wrapper
-version: 0.0.1
+description: This package is Dart wrapper around the June HTTP API - which allows you to easily track data on June in your Dart projects and Flutter apps.
+version: 0.0.2
 repository: 'https://github.com/gaucidaniel/june_flutter'
 
 environment:
